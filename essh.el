@@ -52,6 +52,19 @@ On success, return 0.  Otherwise, go as far as possible and return -1."
     (setq i (+ 1 i)))
   listshellp)
 
+(defun shell-buffer-list-by-name ()
+  "Return a list of shell buffers by name"
+  (mapcar 'buffer-name
+          (mapcar 'process-buffer
+                  (mapcar 'get-process (process-shell)))))
+
+(defun shell-buffer-completing-read ()
+  "Prompt for a shell buffer"
+  (completing-read
+   "Send code to: "
+   (shell-buffer-list-by-name)
+   nil nil nil nil
+   (car (shell-buffer-list-by-name))))
 
 (defun process-shell-choose ()
   "returns which process to use."
@@ -68,11 +81,7 @@ On success, return 0.  Otherwise, go as far as possible and return -1."
 (if (eq shelln 1)
     (setq outpr (get-process (elt shelllist 0))))
 (if (> shelln 1)
-(progn
-(setq proc (completing-read "Send code to:" shelllist nil t (elt shelllist 0)))
-(setq outpr (get-process proc))))
-outpr)
-
+    (get-buffer-process (shell-buffer-completing-read))))
 
 (defun shell-eval-line (sprocess command)
   "Evaluates a single command into the shell process."
