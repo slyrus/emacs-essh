@@ -79,9 +79,9 @@ On success, return 0.  Otherwise, go as far as possible and return -1."
 	   (setq outpr (get-process "shell"))
 	   (sleep-for 0.5)))
 (if (eq shelln 1)
-    (setq outpr (get-process (elt shelllist 0))))
-(if (> shelln 1)
-    (get-buffer-process (shell-buffer-completing-read))))
+    (setq outpr (get-process (elt shelllist 0)))
+  (if (> shelln 1)
+      (get-buffer-process (shell-buffer-completing-read)))))
 
 (defun shell-eval-line (sprocess command)
   "Evaluates a single command into the shell process."
